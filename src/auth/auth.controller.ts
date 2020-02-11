@@ -1,8 +1,9 @@
-import { Controller, Post, Body, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { ResponseDto } from 'src/common/interfaces/response.dto';
+import { ApiResponse } from 'src/common/helpers/api-response.helper';
+import { AuthService } from './auth.service';
 import { AuthenticateDto } from './interfaces/login.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller } from 'src/common/helpers/controller.helper';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,14 @@ export class AuthController {
   ){}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 201,
+    description: 'E-mail e senha válidos',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'E-mail ou senha inválidos.',
+  })
   async authenticate(@Body() { email, password }: AuthenticateDto): Promise<ResponseDto> {
     const user = await this.authService.validateUser(email, password);
 

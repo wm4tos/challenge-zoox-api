@@ -1,4 +1,4 @@
-declare interface JwtDto {
+declare class JwtDto {
   _id: string;
   name: string;
   email: string;
