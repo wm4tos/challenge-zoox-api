@@ -6,10 +6,10 @@ import { UserSchema } from './users.schema';
 
 export const UsersModuleOptions: ModuleMetadata = {
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   exports: [UsersService],
-  providers: [UsersService]
+  providers: [UsersService],
 };
 
 @Module(UsersModuleOptions)

@@ -19,26 +19,26 @@ import { AuthModule } from './auth/auth.module';
       password: process.env.MYSQL_PASSWORD,
       port: 3306,
       entities: [
-        'dist/**/*.entity.{ts,js}'
+        'dist/**/*.entity.{ts,js}',
       ],
-      synchronize: true
+      synchronize: true,
     }),
     MongooseModule.forRoot(
       process.env.MONGODB_URI,
       {
         useUnifiedTopology: true,
-        useNewUrlParser: true
-      },
+        useNewUrlParser: true,
+      }
     ),
     JwtModule.register({
       secret: 'secret',
-      signOptions: { expiresIn: '3600s' }
+      signOptions: { expiresIn: '3600s' },
     }),
     PassportModule,
     UsersModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService]
+  providers: [AppService, AuthService],
 })
 export class AppModule {}
