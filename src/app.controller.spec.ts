@@ -8,14 +8,19 @@ describe('AppController', () => {
   beforeAll(async () => {
     app = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [{
+        provide: AppService,
+        useValue: {
+          getOk: jest.fn(() => 'Api ok!')
+        }
+      }],
     }).compile();
   });
 
-  describe('getHello', () => {
-    it('should return "Hello World!"', () => {
+  describe('getOk', () => {
+    it('should return "Api ok!"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getHello()).toBe('Hello World!');
+      expect(appController.getOk()).toBe('Api ok!');
     });
   });
 });
