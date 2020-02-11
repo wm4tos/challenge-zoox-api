@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ResponseDto } from './common/interfaces/response.dto';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -20,7 +21,7 @@ describe('AppController', () => {
   describe('getOk', () => {
     it('should return "Api ok!"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getOk()).toBe('Api ok!');
+      expect(appController.getOk()).toBe(new ResponseDto(true, null, 'Api ok!'));
     });
   });
 });
