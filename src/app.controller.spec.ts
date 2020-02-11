@@ -21,7 +21,7 @@ describe('AppController', () => {
   describe('getOk', () => {
     it('should return "Api ok!"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getOk()).toBe(new ResponseDto(true, null, 'Api ok!'));
+      expect(appController.getOk()).toEqual(new ResponseDto(true, null, 'Api ok!'));
     });
   });
 });
