@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from 'typeorm';
 import { City } from '../city/city.entity';
 
 @Entity()
+@Unique(['name', 'UF', 'id'])
 export class State {
   @PrimaryGeneratedColumn('uuid')
   id: string;
