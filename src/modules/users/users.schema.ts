@@ -1,7 +1,7 @@
 import { Schema, Document } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
-export interface User extends Document {
+export interface UserDocument extends Document {
   id: ObjectId;
   name: string;
   email: string;
