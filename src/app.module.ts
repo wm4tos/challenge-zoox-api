@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
+import { StateModule } from './modules/state/state.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PassportModule,
     UsersModule,
     AuthModule,
+    StateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
