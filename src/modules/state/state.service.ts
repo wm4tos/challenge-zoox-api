@@ -19,14 +19,14 @@ export class StateService {
   }
 
   create(data: State): State {
-    return this.stateRepository.create(data)
+    return this.stateRepository.create(data);
   }
 
   update(id: string, data: State): Promise<UpdateResult> {
-    return this.stateRepository.update({ id }, data)
+    return this.stateRepository.update({ id }, data);
   }
 
   delete(id: string): Promise<DeleteResult> {
-    return this.stateRepository.delete({ id })
+    return this.stateRepository.delete({ id });
   }
 }

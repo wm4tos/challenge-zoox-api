@@ -9,7 +9,7 @@ export class AuthenticateDto {
 
   @ApiProperty({
     required: true,
-    description: 'Senha do usuário.'
+    description: 'Senha do usuário.',
   })
   password: string;
 }

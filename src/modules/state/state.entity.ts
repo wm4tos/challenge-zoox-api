@@ -12,6 +12,6 @@ export class State {
   @Column({ type: 'char', length: 2 })
   UF: string;
 
-  @OneToMany(type => City, city => city.state)
+  @OneToMany(() => City, city => city.state)
   cities: City[];
 }

@@ -9,6 +9,6 @@ export class City {
   @Column('char')
   name: string;
 
-  @ManyToOne(type => State, state => state.cities)
+  @ManyToOne(() => State, state => state.cities)
   state: State;
 }

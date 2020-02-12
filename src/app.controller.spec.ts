@@ -12,8 +12,8 @@ describe('AppController', () => {
       providers: [{
         provide: AppService,
         useValue: {
-          getOk: jest.fn(() => 'Api ok!')
-        }
+          getOk: jest.fn(() => 'Api ok!'),
+        },
       }],
     }).compile();
   });
