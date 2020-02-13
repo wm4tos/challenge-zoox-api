@@ -82,8 +82,8 @@ describe('State Controller', () => {
       expect(controller.getAll({ id: '1' })).resolves.toEqual(new ResponseDto(true, expectedData));
     });
 
-    it('should return an error because none state with that condition exists', () => {
-      expect(controller.getAll({ id: '50' })).rejects.toEqual(new ResponseDto(true, null, 'Nenhum estado foi encontrado com base na sua busca.'));
+    it('should return a message because none state with that condition exists', () => {
+      expect(controller.getAll({ id: '50' })).resolves.toEqual(new ResponseDto(true, null, 'Nenhum estado foi encontrado com base na sua busca.'));
     });
   });
 
