@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { iterator, add, update, remove } from 'src/common/helpers/test.helper';
+import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { StateController } from './state.controller';
 import { StateService } from './state.service';
 import { State } from './state.entity';
-import { iterator, add, update, remove } from 'src/common/helpers/test.helper';
-import { ResponseDto } from 'src/common/interfaces/response.dto';
+import { StateMessages } from './enums/messages.enum';
 
 describe('State Controller', () => {
   let controller: StateController;
@@ -83,7 +84,7 @@ describe('State Controller', () => {
     });
 
     it('should return a message because none state with that condition exists', () => {
-      expect(controller.getAll({ id: '50' })).resolves.toEqual(new ResponseDto(true, null, 'Nenhum estado foi encontrado com base na sua busca.'));
+      expect(controller.getAll({ id: '50' })).rejects.toEqual(new ResponseDto(true, [], StateMessages.NOT_FOUND_ERROR));
     });
   });
 
@@ -95,7 +96,7 @@ describe('State Controller', () => {
     });
 
     it('should return an error because that state does not exists', () => {
-      expect(controller.getOne('50')).rejects.toEqual(new ResponseDto(true, null, 'Nenhum estado foi encontrado com base na sua busca.'));
+      expect(controller.getOne('50')).rejects.toEqual(new ResponseDto(true, null, StateMessages.NOT_FOUND_ERROR));
     });
   });
 
@@ -107,7 +108,7 @@ describe('State Controller', () => {
     });
 
     it('should throw error because user does not exists' , () => {
-      expect(controller.update('50', { UF: 'SJ' })).rejects.toEqual(new ResponseDto(false, null, 'Estado inexistente.'));
+      expect(controller.update('50', { UF: 'SJ' })).rejects.toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
     });
   });
 
@@ -124,17 +125,17 @@ describe('State Controller', () => {
     });
 
     it('should return message to duplicated item', () => {
-      expect(controller.create(states.slice(0, 1))).rejects.toEqual(new ResponseDto(false, null, 'Estado já cadastrado.'));
+      expect(controller.create(states.slice(0, 1))).rejects.toEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
     });
   });
 
   describe('delete', () => {
     it('should return a success message', () => {
-      expect(controller.remove('1')).resolves.toEqual(new ResponseDto(true, null, 'Estado removido com sucesso.'));
+      expect(controller.remove('1')).resolves.toEqual(new ResponseDto(true, null, StateMessages.DELETED));
     });
 
     it('should return error message because state does not exists', () => {
-      expect(controller.remove('50')).rejects.toEqual(new ResponseDto(false, null, 'Estado inexistente.'));
+      expect(controller.remove('50')).rejects.toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
     });
   });
 });
