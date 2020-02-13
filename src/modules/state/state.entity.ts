@@ -5,14 +5,14 @@ import { City } from '../city/city.entity';
 @Unique(['name', 'UF', 'id'])
 export class State {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column('char')
-  name: string;
+  name?: string;
 
   @Column({ type: 'char', length: 2 })
-  UF: string;
+  UF?: string;
 
   @OneToMany(() => City, city => city.state)
-  cities: City[];
+  cities?: City[];
 }
