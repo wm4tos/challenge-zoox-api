@@ -9,6 +9,7 @@ async function bootstrap(): Promise<void> {
   const options = new DocumentBuilder()
     .setTitle('Challenge ZOOX')
     .setDescription('Essa é a documentação de um teste técnico realizado para o processo seletivo da ZOOX.')
+    .addBearerAuth()
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
