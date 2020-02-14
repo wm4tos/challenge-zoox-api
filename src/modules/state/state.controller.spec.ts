@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { iterator, add, update, remove } from 'src/common/helpers/test.helper';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { NotFoundException, ConflictException } from '@nestjs/common';
+
 import { ResponseDto } from 'src/common/interfaces/response.dto';
+import { MockRepository } from 'src/common/__mocks__/repository';
+
 import { StateController } from './state.controller';
 import { StateService } from './state.service';
 import { State } from './state.entity';
@@ -29,38 +33,14 @@ describe('State Controller', () => {
     },
   ];
 
-  const stateIterator = iterator(states);
-
-  let stateAdd, stateUpdater, stateRemover;
-
   beforeEach(async () => {
-    const statesInstance = [].concat(states);
-    stateAdd = add(statesInstance);
-    stateUpdater = update(statesInstance, stateIterator('find'), stateIterator('findIndex'));
-    stateRemover = remove(statesInstance, stateIterator('findIndex'));
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [StateController],
       providers: [
+        StateService,
         {
-          provide: StateService,
-          useValue: {
-            findAll(where: State): State|State[] {
-              return stateIterator()(where);
-            },          
-            findOne(where: State): any {
-              return stateIterator('find')(where);
-            },
-            create(data: State): State[] {
-              return stateAdd(data);
-            },
-            update(id: string, data: State): State {
-              return stateUpdater({ id }, data);
-            },          
-            delete(id: string): State[] {
-              return stateRemover({ id });
-            },
-          },
+          provide: getRepositoryToken(State),
+          useValue: MockRepository<State>([].concat(states)),
         },
       ],
     }).compile();
