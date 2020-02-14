@@ -1,4 +1,4 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param } from '@nestjs/common';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
@@ -31,5 +31,22 @@ export class StateController {
     if (states.length) return new ResponseDto(true, states);
 
     throw new NotFoundException(new ResponseDto(false, states, StateMessages.NOT_FOUND_ERROR));
+  }
+
+  @Get('/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Estado encontrado.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Estado não encontrado.',
+  })
+  async getOne(@Param('id') id: string): Promise<ResponseDto> {
+    const state = await this.stateService.findOne({ id });
+
+    if (state) return new ResponseDto(true, state);
+
+    throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
   }
 }
