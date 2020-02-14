@@ -1,27 +1,28 @@
 export function itemIterator<T> (condition: object) {
   return (item: T): boolean => {
-    if (!Object.keys(condition).length) return true;
+    if (!condition || !Object.keys(condition).length) return true;
 
     const entries = Object.entries(condition);
 
     return entries
       .reduce((acc: Array<boolean>, [key, value]) => acc.concat(item[key] === value), [])
-      .some(item => !item);
+      .some(item => item);
   };
 }
 
-export function iterator<T> (items: T[]) {
-  return (method = 'filter') => (condition: object): T|T[] =>
-    items[method](itemIterator<T>(condition));
+export function iterator<T> (method: string) {
+  return (items: T[]) => ({ where }: any): any|any[] => {
+    return items[method](itemIterator<T>(where));
+  };
 }
 
 export function add<T> (items: T[]) {
   return (item: T): T[] => items.concat(item);
 }
 
-export function remove<T> (items: T[], indexFinder: Function) {
+export function remove<T> (items: T[]) {
   return (condition: object): T[] => {
-    const index = indexFinder(condition);
+    const index = iterator('findIndex')(items)(condition);
 
     items.splice(index, 1);
 
@@ -29,10 +30,10 @@ export function remove<T> (items: T[], indexFinder: Function) {
   };
 }
 
-export function update<T> (items: T[], itemFinder: Function, indexFinder: Function) {
+export function update<T> (items: T[]) {
   return (condition: object, data: T): T[] => {
-    const item = itemFinder(condition);
-    const index = indexFinder(condition);
+    const item = iterator<T>('find')(items)(condition);
+    const index = iterator<T>('filter')(items)(condition);
     
     items.splice(index, 1, { ...item, ...data });
 
