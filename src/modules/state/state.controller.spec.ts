@@ -56,7 +56,7 @@ describe('State Controller', () => {
     it('should return all states', () => {
       return controller.getAll()
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, states));
+          expect(response).toStrictEqual(new ResponseDto(true, states));
         });
     });
 
@@ -65,7 +65,7 @@ describe('State Controller', () => {
 
       return controller.getAll({ id: '1' })
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
         });
     });
 
@@ -73,7 +73,7 @@ describe('State Controller', () => {
       return controller.getAll({ id: '1' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toEqual(new ResponseDto(false, [], StateMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, [], StateMessages.NOT_FOUND_ERROR));
         });
     });
   });
@@ -84,7 +84,7 @@ describe('State Controller', () => {
 
       return controller.getOne('1')
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
         });
     });
 
@@ -92,7 +92,7 @@ describe('State Controller', () => {
       return controller.getOne('50')
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
         });
     });
   });
@@ -103,7 +103,7 @@ describe('State Controller', () => {
 
       return controller.update('1', { UF: 'SJ' })
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
         });
     });
 
@@ -111,7 +111,7 @@ describe('State Controller', () => {
       return controller.update('50', { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
         });
     });
   });
@@ -127,7 +127,7 @@ describe('State Controller', () => {
 
       return controller.create(expectedData)
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
         });
     });
 
@@ -135,7 +135,7 @@ describe('State Controller', () => {
       return controller.create(states.slice(0, 1))
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
-          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
         });
     });
   });
@@ -144,7 +144,7 @@ describe('State Controller', () => {
     it('should return a success message', () => {
       return controller.remove('1')
         .then((response: ResponseDto) => {
-          expect(response).toEqual(new ResponseDto(true, null, StateMessages.DELETED));
+          expect(response).toStrictEqual(new ResponseDto(true, null, StateMessages.DELETED));
         });
     });
 
@@ -152,7 +152,7 @@ describe('State Controller', () => {
       return controller.remove('50')
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(409);
-          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
         });
     });
   });
