@@ -54,17 +54,27 @@ describe('State Controller', () => {
 
   describe('getAll', () => {
     it('should return all states', () => {
-      expect(controller.getAll()).resolves.toEqual(new ResponseDto(true, states));
+      return controller.getAll()
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, states));
+        });
     });
 
     it('should return "SP" state', () => {
-      const expectedData = states.find(x => x.UF === 'SP');
-      
-      expect(controller.getAll({ id: '1' })).resolves.toEqual(new ResponseDto(true, expectedData));
+      const expectedData = states.filter(x => x.id === '1');
+
+      return controller.getAll({ id: '1' })
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, expectedData));
+        });
     });
 
     it('should return a message because none state with that condition exists', () => {
-      expect(controller.getAll({ id: '50' })).rejects.toEqual(new ResponseDto(true, [], StateMessages.NOT_FOUND_ERROR));
+      return controller.getAll({ id: '1' })
+        .catch((err: NotFoundException) => {
+          expect(err.getStatus()).toBe(404);
+          expect(err.message).toEqual(new ResponseDto(false, [], StateMessages.NOT_FOUND_ERROR));
+        });
     });
   });
 
@@ -72,11 +82,18 @@ describe('State Controller', () => {
     it('should return "SP" state', () => {
       const expectedData = states.find(x => x.UF === 'SP');
 
-      expect(controller.getOne('1')).resolves.toEqual(new ResponseDto(true, expectedData));
+      return controller.getOne('1')
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, expectedData));
+        });
     });
 
     it('should return an error because that state does not exists', () => {
-      expect(controller.getOne('50')).rejects.toEqual(new ResponseDto(true, null, StateMessages.NOT_FOUND_ERROR));
+      return controller.getOne('50')
+        .catch((err: NotFoundException) => {
+          expect(err.getStatus()).toBe(404);
+          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+        });
     });
   });
 
@@ -84,11 +101,18 @@ describe('State Controller', () => {
     it('should return item updated', () => {
       const expectedData = states.find(x => x.UF === 'SP');
 
-      expect(controller.update('1', { UF: 'SJ' })).resolves.toEqual(new ResponseDto(true, expectedData));
+      return controller.update('1', { UF: 'SJ' })
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, expectedData));
+        });
     });
 
     it('should throw error because user does not exists' , () => {
-      expect(controller.update('50', { UF: 'SJ' })).rejects.toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+      return controller.update('50', { UF: 'SJ' })
+        .catch((err: NotFoundException) => {
+          expect(err.getStatus()).toBe(404);
+          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+        });
     });
   });
 
@@ -101,21 +125,35 @@ describe('State Controller', () => {
         cities: [],
       };
 
-      expect(controller.create(expectedData)).resolves.toEqual(new ResponseDto(true, expectedData));
+      return controller.create(expectedData)
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, expectedData));
+        });
     });
 
     it('should return message to duplicated item', () => {
-      expect(controller.create(states.slice(0, 1))).rejects.toEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
+      return controller.create(states.slice(0, 1))
+        .catch((err: ConflictException) => {
+          expect(err.getStatus()).toBe(409);
+          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
+        });
     });
   });
 
   describe('delete', () => {
     it('should return a success message', () => {
-      expect(controller.remove('1')).resolves.toEqual(new ResponseDto(true, null, StateMessages.DELETED));
+      return controller.remove('1')
+        .then((response: ResponseDto) => {
+          expect(response).toEqual(new ResponseDto(true, null, StateMessages.DELETED));
+        });
     });
 
     it('should return error message because state does not exists', () => {
-      expect(controller.remove('50')).rejects.toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+      return controller.remove('50')
+        .catch((err: NotFoundException) => {
+          expect(err.getStatus()).toBe(409);
+          expect(err.message).toEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+        });
     });
   });
 });
