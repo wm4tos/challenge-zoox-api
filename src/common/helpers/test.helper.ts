@@ -17,7 +17,7 @@ export function iterator<T> (method: string) {
 }
 
 export function add<T> (items: T[]) {
-  return (item: T): T[] => items.concat({ ...item, _id: (items.length + 1).toString() });
+  return (item: T): T[] => items.concat(item);
 }
 
 export function remove<T> (items: T[]) {
