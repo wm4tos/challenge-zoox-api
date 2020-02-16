@@ -3,6 +3,8 @@ import {
   NotFoundException, ConflictException,
   // ConflictException, 
 } from '@nestjs/common';
+import { getModelToken } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { MockRepository } from 'src/common/__mocks__/repository';
@@ -11,26 +13,25 @@ import { StateController } from './state.controller';
 import { StateService } from './state.service';
 import { StateMessages } from './enums/messages.enum';
 import { StateDto } from './dtos/state.dto';
-import { getModelToken } from '@nestjs/mongoose';
 import { CreateStateDto } from './dtos/create-state.dto';
 
 describe('State Controller', () => {
   let controller: StateController;
   const states: StateDto[] = [
     {
-      _id: '1',
+      _id: new ObjectId(),
       name: 'São Paulo',
       UF: 'SP',
       cities: [],
     },
     {
-      _id: '2',
+      _id: new ObjectId(),
       name: 'Rio de Janeiro',
       UF: 'RJ',
       cities: [],
     },
     {
-      _id: '3',
+      _id: new ObjectId(),
       name: 'Minas Gerais',
       UF: 'MG',
       cities: [],
@@ -64,12 +65,12 @@ describe('State Controller', () => {
         });
     });
 
-    it('should return "SP" state', () => {
-      const expectedData = states.filter(x => x._id === '1');
+    it('should return an array with "SP" state', () => {
+      const [SP] = states;
 
-      return controller.getAll({ _id: '1' })
+      return controller.getAll({ _id: SP._id })
         .then((response: ResponseDto) => {
-          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, [SP]));
         });
     });
 
@@ -86,14 +87,14 @@ describe('State Controller', () => {
     it('should return "SP" state', () => {
       const expectedData = states.find(x => x.UF === 'SP');
 
-      return controller.getOne('1')
+      return controller.getOne(expectedData._id)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, expectedData));
         });
     });
 
     it('should return an error because that state does not exists', () => {
-      return controller.getOne('50')
+      return controller.getOne(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
@@ -105,14 +106,14 @@ describe('State Controller', () => {
     it('should return item updated', () => {
       const expectedData = states.find(x => x.UF === 'SP');
 
-      return controller.update('1', { UF: 'SJ' })
+      return controller.update(expectedData._id, { UF: 'SJ' })
         .then((response: ResponseDto) => {
-          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, { ...expectedData, UF: 'SJ' }, StateMessages.UPDATED));
         });
     });
 
     it('should throw error because user does not exists' , () => {
-      return controller.update('50', { UF: 'SJ' })
+      return controller.update(new ObjectId(), { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
@@ -123,7 +124,7 @@ describe('State Controller', () => {
   describe('create', () => {
     it('should return created item', () => {
       const expectedData: StateDto = {
-        _id: '4',
+        _id: new ObjectId(),
         name: 'Mato Grosso do Sul',
         UF: 'MS',
         cities: [],
@@ -147,14 +148,15 @@ describe('State Controller', () => {
 
   describe('delete', () => {
     it('should return a success message', () => {
-      return controller.remove('1')
+      const [SP] = states;
+      return controller.remove(SP._id)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, null, StateMessages.DELETED));
         });
     });
 
     it('should return error message because state does not exists', () => {
-      return controller.remove('50')
+      return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(409);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
