@@ -26,11 +26,11 @@ export class StateService {
     return this.stateRepository.create(data);
   }
 
-  update(id: ObjectId, data: StateDto): Query<any> {
-    return this.stateRepository.update({ id }, data);
+  update(_id: ObjectId, data: StateDto): Query<any> {
+    return this.stateRepository.updateOne({ _id }, data);
   }
 
-  delete(id: ObjectId): Query<DeleteWriteOpResultObject['result'] & { deletedCount?: number }> {
-    return this.stateRepository.remove({ id });
+  delete(_id: ObjectId): Query<DeleteWriteOpResultObject['result'] & { deletedCount?: number }> {
+    return this.stateRepository.remove({ _id });
   }
 }
