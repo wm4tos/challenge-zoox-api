@@ -8,6 +8,8 @@ import { Controller } from 'src/common/helpers/controller.helper';
 import { StateService } from './state.service';
 import { StateMessages } from './enums/messages.enum';
 import { StateDto } from './dtos/state.dto';
+import { CreateStateDto } from './dtos/create-state.dto';
+import { StateDocument } from './state.schema';
 
 @Controller('states')
 export class StateController {
@@ -49,5 +51,30 @@ export class StateController {
     if (state) return new ResponseDto(true, state);
 
     throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+  }
+
+  @Post()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: StateMessages.CREATED,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: StateMessages.DUPLICATED
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async create(@Body() state: CreateStateDto) {
+    try {
+      const created = await this.stateService.create(<StateDocument>state);
+
+      return new ResponseDto(true, created, StateMessages.CREATED);
+    } catch (error) {
+      switch(error.code) {
+      case 11000:
+        throw new ConflictException(new ResponseDto(false, null, StateMessages.DUPLICATED));
+      default:
+        throw error;
+      }
+    }
   }
 }
