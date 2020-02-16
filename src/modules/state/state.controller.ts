@@ -1,6 +1,7 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
+import { ApiParam } from '@nestjs/swagger';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
@@ -27,7 +28,7 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: 'Nenhum estado encontrado.',
   })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
     const states = await this.stateService.findAll(query);
 
@@ -80,6 +81,10 @@ export class StateController {
   }
 
   @Put('/:_id')
+  @ApiParam({
+    name: '_id',
+    type: String,
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: StateMessages.UPDATED,
@@ -97,5 +102,29 @@ export class StateController {
     await this.stateService.update(_id as ObjectId, data);
 
     return new ResponseDto(true, Object.assign(state, data), StateMessages.UPDATED);
+  }
+
+  @Delete('/:_id')
+  @ApiParam({
+    name: '_id',
+    type: String,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: StateMessages.DELETED,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: StateMessages.INEXISTENT_STATE,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async remove(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
+    const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
+
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+
+    await this.stateService.delete(new ObjectId(_id));
+
+    return new ResponseDto(true, null, StateMessages.DELETED);
   }
 }
