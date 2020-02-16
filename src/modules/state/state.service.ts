@@ -1,32 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult, DeleteResult } from 'typeorm';
-import { State } from './state.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Query, DocumentQuery, Document } from 'mongoose';
+import { DeleteWriteOpResultObject } from 'mongodb';
+
+import { StateDto } from './dtos/state.dto';
+import { StateDocument } from './state.schema';
+import { CreateStateDto } from './dtos/create-state.dto';
 
 @Injectable()
 export class StateService {
   constructor(
-    @InjectRepository(State)
-    private readonly stateRepository: Repository<State>
+    @InjectModel('State')
+    private readonly stateRepository: Model<StateDocument>
   ) {}
 
-  findAll(where?: State): Promise<State[]> {
-    return this.stateRepository.find({ where });
+  findAll(query?: StateDto): DocumentQuery<StateDocument[], Document> {
+    return this.stateRepository.find(query);
   }
 
-  findOne(where?: State): Promise<State> {
-    return this.stateRepository.findOne({ where });
+  findOne(query?: StateDto): DocumentQuery<StateDocument, Document> {
+    return this.stateRepository.findOne(query);
   }
 
-  create(data: State): State {
+  create(data: CreateStateDto): Promise<StateDocument> {
     return this.stateRepository.create(data);
   }
 
-  update(id: string, data: State): Promise<UpdateResult> {
+  update(id: string, data: StateDto): Query<any> {
     return this.stateRepository.update({ id }, data);
   }
 
-  delete(id: string): Promise<DeleteResult> {
-    return this.stateRepository.delete({ id });
+  delete(id: string): Query<DeleteWriteOpResultObject['result'] & { deletedCount?: number }> {
+    return this.stateRepository.remove({ id });
   }
 }
