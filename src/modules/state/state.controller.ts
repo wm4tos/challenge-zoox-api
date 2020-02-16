@@ -28,7 +28,7 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: 'Nenhum estado encontrado.',
   })
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
     const states = await this.stateService.findAll(query);
 
