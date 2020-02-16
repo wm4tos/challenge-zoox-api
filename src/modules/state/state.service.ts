@@ -31,6 +31,6 @@ export class StateService {
   }
 
   delete(_id: ObjectId): Query<DeleteWriteOpResultObject['result'] & { deletedCount?: number }> {
-    return this.stateRepository.remove({ _id });
+    return this.stateRepository.deleteOne({ _id });
   }
 }
