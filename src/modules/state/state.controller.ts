@@ -1,4 +1,4 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, HttpException, ConflictException } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
@@ -60,12 +60,12 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: StateMessages.DUPLICATED
+    description: StateMessages.DUPLICATED,
   })
   @UseGuards(AuthGuard('jwt'))
-  async create(@Body() state: CreateStateDto) {
+  async create(@Body() state: CreateStateDto): Promise<ResponseDto> {
     try {
-      const created = await this.stateService.create(<StateDocument>state);
+      const created = await this.stateService.create(state as StateDocument);
 
       return new ResponseDto(true, created, StateMessages.CREATED);
     } catch (error) {

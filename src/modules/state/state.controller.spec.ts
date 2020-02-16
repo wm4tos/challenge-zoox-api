@@ -129,15 +129,15 @@ describe('State Controller', () => {
         cities: [],
       };
 
-      return controller.create(<CreateStateDto>expectedData)
+      return controller.create(expectedData as CreateStateDto)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, states.concat(expectedData), StateMessages.CREATED));
         });
     });
 
     it('should return message to duplicated item', () => {
-      const [state] = states
-      return controller.create(<CreateStateDto>state)
+      const [state] = states;
+      return controller.create(state as CreateStateDto)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
