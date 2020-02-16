@@ -1,13 +1,13 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, HttpException, ConflictException } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
 import { Controller } from 'src/common/helpers/controller.helper';
 
 import { StateService } from './state.service';
-import { State } from './state.entity';
 import { StateMessages } from './enums/messages.enum';
-import { AuthGuard } from '@nestjs/passport';
+import { StateDto } from './dtos/state.dto';
 
 @Controller('states')
 export class StateController {
@@ -25,7 +25,7 @@ export class StateController {
     description: 'Nenhum estado encontrado.',
   })
   @UseGuards(AuthGuard('jwt'))
-  async getAll(@Query() query?: State): Promise<ResponseDto> {
+  async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
     const states = await this.stateService.findAll(query);
 
     if (states.length) return new ResponseDto(true, states);
@@ -33,7 +33,7 @@ export class StateController {
     throw new NotFoundException(new ResponseDto(false, states, StateMessages.NOT_FOUND_ERROR));
   }
 
-  @Get('/:id')
+  @Get('/:_id')
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Estado encontrado.',
@@ -42,8 +42,9 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: 'Estado não encontrado.',
   })
-  async getOne(@Param('id') id: string): Promise<ResponseDto> {
-    const state = await this.stateService.findOne({ id });
+  @UseGuards(AuthGuard('jwt'))
+  async getOne(@Param('_id') _id: string): Promise<ResponseDto> {
+    const state = await this.stateService.findOne({ _id });
 
     if (state) return new ResponseDto(true, state);
 
