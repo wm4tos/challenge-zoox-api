@@ -6,6 +6,6 @@ export function MockRepository<T> (data: T[]): any {
     update: update<T>([].concat(data)),
     find: iterator('filter')([].concat(data)),
     findOne: iterator('find')([].concat(data)),
-    delete: remove<T>([].concat(data)),
+    remove: remove<T>([].concat(data)),
   })))();
 }
