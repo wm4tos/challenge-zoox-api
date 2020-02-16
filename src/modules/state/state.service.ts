@@ -14,15 +14,15 @@ export class StateService {
     private readonly stateModel: Model<StateDocument>
   ) {}
 
-  findAll(query?: StateDto): DocumentQuery<StateDocument[], Document> {
+  findAll(query?: StateDto): DocumentQuery<StateDto[] | any, Document> {
     return this.stateModel.find(query);
   }
 
-  findOne(query?: StateDto): DocumentQuery<StateDocument, Document> {
+  findOne(query?: StateDto): DocumentQuery<StateDto | any, Document> {
     return this.stateModel.findOne(query);
   }
 
-  create(data: CreateStateDto): Promise<StateDocument> {
+  create(data: CreateStateDto): Promise<StateDto> {
     return this.stateModel.create(data);
   }
 
