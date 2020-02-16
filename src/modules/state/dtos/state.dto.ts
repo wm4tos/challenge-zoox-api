@@ -11,5 +11,5 @@ export class StateDto {
   @ApiProperty()
   UF?: string;
   @ApiProperty()
-  cities?: Array<CityDto>;
+  cities?: Array<CityDto | ObjectId>;
 }
