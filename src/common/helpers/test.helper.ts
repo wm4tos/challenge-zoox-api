@@ -11,13 +11,13 @@ export function itemIterator<T> (condition: object) {
 }
 
 export function iterator<T> (method: string) {
-  return (items: T[]) => ({ where }: any): any|any[] => {
-    return items[method](itemIterator<T>(where));
+  return (items: T[]) => (query: any): any|any[] => {
+    return items[method](itemIterator<T>(query));
   };
 }
 
 export function add<T> (items: T[]) {
-  return (item: T): T[] => items.concat(item);
+  return (item: T): T[] => items.concat({ ...item, _id: (items.length + 1).toString() });
 }
 
 export function remove<T> (items: T[]) {
