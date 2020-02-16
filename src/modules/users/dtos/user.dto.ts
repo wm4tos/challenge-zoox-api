@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export class User {
+export class UserDto {
   _id: ObjectId;
   name: string;
   email: string;
