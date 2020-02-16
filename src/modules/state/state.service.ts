@@ -11,26 +11,26 @@ import { CreateStateDto } from './dtos/create-state.dto';
 export class StateService {
   constructor(
     @InjectModel('State')
-    private readonly stateRepository: Model<StateDocument>
+    private readonly stateModel: Model<StateDocument>
   ) {}
 
   findAll(query?: StateDto): DocumentQuery<StateDocument[], Document> {
-    return this.stateRepository.find(query);
+    return this.stateModel.find(query);
   }
 
   findOne(query?: StateDto): DocumentQuery<StateDocument, Document> {
-    return this.stateRepository.findOne(query);
+    return this.stateModel.findOne(query);
   }
 
   create(data: CreateStateDto): Promise<StateDocument> {
-    return this.stateRepository.create(data);
+    return this.stateModel.create(data);
   }
 
   update(_id: ObjectId, data: StateDto): Query<any> {
-    return this.stateRepository.updateOne({ _id }, data);
+    return this.stateModel.updateOne({ _id }, data);
   }
 
   delete(_id: ObjectId): Query<DeleteWriteOpResultObject['result'] & { deletedCount?: number }> {
-    return this.stateRepository.deleteOne({ _id });
+    return this.stateModel.deleteOne({ _id });
   }
 }
