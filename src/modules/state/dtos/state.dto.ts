@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongodb';
 
 export class StateDto {
   @ApiProperty()
-  _id?: string;
+  _id?: string | ObjectId;
   @ApiProperty()
   name?: string;
   @ApiProperty()
