@@ -1,5 +1,6 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ObjectId } from 'mongodb';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
@@ -45,7 +46,7 @@ export class StateController {
     description: 'Estado não encontrado.',
   })
   @UseGuards(AuthGuard('jwt'))
-  async getOne(@Param('_id') _id: string): Promise<ResponseDto> {
+  async getOne(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id });
 
     if (state) return new ResponseDto(true, state);
@@ -76,5 +77,25 @@ export class StateController {
         throw error;
       }
     }
+  }
+
+  @Put('/:_id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: StateMessages.UPDATED,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: StateMessages.INEXISTENT_STATE,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('_id') _id: string | ObjectId, @Body() { cities, ...data }: StateDto): Promise<ResponseDto> {
+    const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
+
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+
+    await this.stateService.update(_id as ObjectId, data);
+
+    return new ResponseDto(true, Object.assign(state, data), StateMessages.UPDATED);
   }
 }
