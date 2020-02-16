@@ -158,7 +158,7 @@ describe('State Controller', () => {
     it('should return error message because state does not exists', () => {
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
-          expect(err.getStatus()).toBe(409);
+          expect(err.getStatus()).toBe(404);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
         });
     });
