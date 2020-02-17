@@ -8,21 +8,21 @@ import { CitiesDocument } from './cities.schema';
 import { CreateCityDto } from './dtos/create-city.dto';
 
 @Injectable()
-export class UsersService {
+export class CitiesService {
   constructor(
     @InjectModel('Cities')
     private readonly citiesModel: Model<CitiesDocument>
   ) {}
 
-  findAll(query?: CityDto): DocumentQuery<CitiesDocument[], Document> {
+  findAll(query?: CityDto): DocumentQuery<CityDto[] | any, Document> {
     return this.citiesModel.find(query);
   }
 
-  findOne(query?: CityDto): DocumentQuery<CitiesDocument, Document> {
+  findOne(query?: CityDto): DocumentQuery<CityDto | any, Document> {
     return this.citiesModel.findOne(query);
   }
 
-  create(data: CreateCityDto): Promise<CitiesDocument> {
+  create(data: CreateCityDto): Promise<CityDto | any> {
     return this.citiesModel.create(data);
   }
 
