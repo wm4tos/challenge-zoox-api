@@ -4,7 +4,6 @@ import { getModelToken } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
-import { MockRepository } from 'src/common/__mocks__/repository';
 
 import { StateController } from './state.controller';
 import { StateService } from './state.service';
@@ -14,6 +13,7 @@ import { CreateStateDto } from './dtos/create-state.dto';
 
 describe('State Controller', () => {
   let controller: StateController;
+  let service: StateService;
   const states: StateDto[] = [
     {
       _id: new ObjectId(),
@@ -42,12 +42,13 @@ describe('State Controller', () => {
         StateService,
         {
           provide: getModelToken('State'),
-          useValue: MockRepository<StateDto>([].concat(states)),
-        },
+          useValue: {}
+        }
       ],
     }).compile();
 
     controller = module.get<StateController>(StateController);
+    service = module.get<StateService>(StateService)
   });
 
   it('should be defined', () => {
@@ -56,6 +57,8 @@ describe('State Controller', () => {
 
   describe('getAll', () => {
     it('should return all states', () => {
+      jest.spyOn(service, 'findAll').mockResolvedValue(states);
+
       return controller.getAll()
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, states));
@@ -65,6 +68,8 @@ describe('State Controller', () => {
     it('should return an array with "SP" state', () => {
       const [SP] = states;
 
+      jest.spyOn(service, 'findAll').mockResolvedValue([SP]);
+
       return controller.getAll({ _id: SP._id })
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, [SP]));
@@ -72,6 +77,8 @@ describe('State Controller', () => {
     });
 
     it('should return a message because none state with that condition exists', () => {
+      jest.spyOn(service, 'findAll').mockResolvedValue([]);
+
       return controller.getAll({ _id: '1' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
@@ -82,15 +89,19 @@ describe('State Controller', () => {
 
   describe('getOne', () => {
     it('should return "SP" state', () => {
-      const expectedData = states.find(x => x.UF === 'SP');
+      const [SP] = states;
 
-      return controller.getOne(expectedData._id)
+      jest.spyOn(service, 'findOne').mockResolvedValue(SP);
+
+      return controller.getOne(SP._id)
         .then((response: ResponseDto) => {
-          expect(response).toStrictEqual(new ResponseDto(true, expectedData));
+          expect(response).toStrictEqual(new ResponseDto(true, SP));
         });
     });
 
     it('should return an error because that state does not exists', () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
       return controller.getOne(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
@@ -101,15 +112,21 @@ describe('State Controller', () => {
 
   describe('update', () => {
     it('should return item updated', () => {
-      const expectedData = states.find(x => x.UF === 'SP');
+      const [SP] = states
+      const expected = { ...SP, UF: 'SJ' }
 
-      return controller.update(expectedData._id, { UF: 'SJ' })
+      jest.spyOn(service, 'findOne').mockResolvedValue(SP);
+      jest.spyOn(service, 'update').mockResolvedValue(expected);
+
+      return controller.update(SP._id, { UF: 'SJ' })
         .then((response: ResponseDto) => {
-          expect(response).toStrictEqual(new ResponseDto(true, { ...expectedData, UF: 'SJ' }, StateMessages.UPDATED));
+          expect(response).toStrictEqual(new ResponseDto(true, expected, StateMessages.UPDATED));
         });
     });
 
     it('should throw error because user does not exists' , () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
       return controller.update(new ObjectId(), { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
@@ -120,21 +137,26 @@ describe('State Controller', () => {
 
   describe('create', () => {
     it('should return created item', () => {
-      const expectedData: StateDto = {
+      const expected: StateDto = {
         _id: new ObjectId(),
         name: 'Mato Grosso do Sul',
         UF: 'MS',
         cities: [],
       };
 
-      return controller.create(expectedData as CreateStateDto)
+      jest.spyOn(service, 'create').mockResolvedValue(expected);
+
+      return controller.create(expected as CreateStateDto)
         .then((response: ResponseDto) => {
-          expect(response).toStrictEqual(new ResponseDto(true, states.concat(expectedData), StateMessages.CREATED));
+          expect(response).toStrictEqual(new ResponseDto(true, expected, StateMessages.CREATED));
         });
     });
 
     it('should return message to duplicated item', () => {
       const [state] = states;
+
+      jest.spyOn(service, 'create').mockRejectedValue({ code: 11000 });
+
       return controller.create(state as CreateStateDto)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
@@ -146,6 +168,10 @@ describe('State Controller', () => {
   describe('delete', () => {
     it('should return a success message', () => {
       const [SP] = states;
+
+      jest.spyOn(service, 'findOne').mockResolvedValue(SP);
+      jest.spyOn(service, 'delete').mockResolvedValue(null);
+
       return controller.remove(SP._id)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, null, StateMessages.DELETED));
@@ -153,6 +179,8 @@ describe('State Controller', () => {
     });
 
     it('should return error message because state does not exists', () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(null);
+
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
