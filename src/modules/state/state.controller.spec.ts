@@ -130,7 +130,7 @@ describe('State Controller', () => {
       return controller.update(new ObjectId(), { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
         });
     });
   });
@@ -184,7 +184,7 @@ describe('State Controller', () => {
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
         });
     });
   });

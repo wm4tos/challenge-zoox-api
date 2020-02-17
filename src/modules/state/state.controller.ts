@@ -91,13 +91,13 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: StateMessages.INEXISTENT_STATE,
+    description: StateMessages.NOT_FOUND_ERROR,
   })
   @UseGuards(AuthGuard('jwt'))
   async update(@Param('_id') _id: string | ObjectId, @Body() { cities, ...data }: StateDto): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
-    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
 
     await this.stateService.update(_id as ObjectId, data);
 
@@ -115,13 +115,13 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: StateMessages.INEXISTENT_STATE,
+    description: StateMessages.NOT_FOUND_ERROR,
   })
   @UseGuards(AuthGuard('jwt'))
   async remove(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
-    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.INEXISTENT_STATE));
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
 
     await this.stateService.delete(new ObjectId(_id));
 
