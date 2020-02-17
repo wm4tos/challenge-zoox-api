@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+
 import { CitiesSchema } from './cities.schema';
+import { CitiesService } from './cities.service';
+import { CitiesController } from './cities.controller';
 
 @Module({
-  controllers: [],
+  controllers: [CitiesController],
   imports: [MongooseModule.forFeature([{ name: 'Cities', schema: CitiesSchema }])],
-  providers: [],
+  providers: [CitiesService],
 })
 export class CitiesModule {};
