@@ -26,7 +26,7 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'Nenhum estado encontrado.',
+    description: StateMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
   async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
@@ -34,7 +34,7 @@ export class StateController {
 
     if (states.length) return new ResponseDto(true, states);
 
-    throw new NotFoundException(new ResponseDto(false, states, StateMessages.NOT_FOUND_ERROR));
+    throw new NotFoundException(new ResponseDto(false, states, StateMessages.NOT_FOUND));
   }
 
   @Get('/:_id')
@@ -52,7 +52,7 @@ export class StateController {
 
     if (state) return new ResponseDto(true, state);
 
-    throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+    throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND));
   }
 
   @Post()
@@ -91,13 +91,13 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: StateMessages.NOT_FOUND_ERROR,
+    description: StateMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
   async update(@Param('_id') _id: string | ObjectId, @Body() { cities, ...data }: StateDto): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
-    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND));
 
     await this.stateService.update(_id as ObjectId, data);
 
@@ -115,13 +115,13 @@ export class StateController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: StateMessages.NOT_FOUND_ERROR,
+    description: StateMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
   async remove(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
-    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND_ERROR));
+    if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND));
 
     await this.stateService.delete(new ObjectId(_id));
 

@@ -88,7 +88,7 @@ describe('Cities Controller', () => {
       return controller.getAll({ _id: '1' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, [], CityMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, [], CityMessages.NOT_FOUND));
         });
     });
   });
@@ -111,7 +111,7 @@ describe('Cities Controller', () => {
       return controller.getOne(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
@@ -136,7 +136,7 @@ describe('Cities Controller', () => {
       return controller.update(new ObjectId(), { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
@@ -190,7 +190,7 @@ describe('Cities Controller', () => {
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND_ERROR));
+          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
