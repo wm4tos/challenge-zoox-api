@@ -1,11 +1,11 @@
-import { Post, Body, HttpException, HttpStatus, Controller, NotFoundException } from '@nestjs/common';
+import { Post, Body, HttpStatus, Controller, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
 
 import { AuthService } from './auth.service';
-import { AuthenticateDto } from './interfaces/login.dto';
+import { AuthenticateDto } from './dtos/login.dto';
 import { AuthMessages } from './enums/messages.enum';
 
 @Controller('auth')
@@ -17,11 +17,11 @@ export class AuthController {
 
   @Post()
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: AuthMessages.OK,
   })
   @ApiResponse({
-    status: 401,
+    status: HttpStatus.UNAUTHORIZED,
     description: AuthMessages.INVALID,
   })
   @ApiResponse({
@@ -35,7 +35,7 @@ export class AuthController {
 
     const user = await this.authService.validateUserAndPassword(email, password);
 
-    if (!user) throw new HttpException(new ResponseDto(false, null, AuthMessages.INVALID), HttpStatus.UNAUTHORIZED);
+    if (!user) throw new UnauthorizedException(new ResponseDto(false, null, AuthMessages.INVALID));
 
     return new ResponseDto(true, this.authService.createToken(user));
   }
