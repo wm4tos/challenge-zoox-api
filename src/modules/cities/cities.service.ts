@@ -1,4 +1,4 @@
-import { Model, DocumentQuery, Document, Query } from 'mongoose';
+import { Model, Query, Aggregate } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId, DeleteWriteOpResultObject } from 'mongodb';
@@ -6,6 +6,7 @@ import { ObjectId, DeleteWriteOpResultObject } from 'mongodb';
 import { CityDto } from './dtos/city.dto';
 import { CitiesDocument } from './cities.schema';
 import { CreateCityDto } from './dtos/create-city.dto';
+import { generateAggregation } from './helpers/aggregate.helper';
 
 @Injectable()
 export class CitiesService {
@@ -14,12 +15,12 @@ export class CitiesService {
     private readonly citiesModel: Model<CitiesDocument>
   ) {}
 
-  findAll(query?: CityDto): DocumentQuery<CityDto[] | any, Document> {
-    return this.citiesModel.find(query);
+  findAll(query: CityDto = {}): Aggregate<CityDto[]> {
+    return this.citiesModel.aggregate<CityDto>(generateAggregation(query));
   }
 
-  findOne(query?: CityDto): DocumentQuery<CityDto | any, Document> {
-    return this.citiesModel.findOne(query);
+  findOne(query?: CityDto): Aggregate<CityDto[]> {
+    return this.citiesModel.aggregate<CityDto>(generateAggregation(query));
   }
 
   create(data: CreateCityDto): Promise<CityDto | any> {
