@@ -9,6 +9,7 @@ import { CitiesService } from './cities.service';
 import { CityMessages } from './enums/messages.enum';
 import { CityDto } from './dtos/city.dto';
 import { CreateCityDto } from './dtos/create-city.dto';
+import { ApiParam } from '@nestjs/swagger';
 
 @Controller('cities')
 export class CitiesController {
@@ -34,6 +35,10 @@ export class CitiesController {
   }
 
   @Get('/:_id')
+  @ApiParam({
+    name: '_id',
+    type: String,
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: CityMessages.OK,
