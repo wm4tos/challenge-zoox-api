@@ -5,7 +5,6 @@ export interface StateDocument extends Document {
   _id: ObjectId;
   name: string;
   UF: string;
-  cities: Array<ObjectId>;
 }
 
 export const StateSchema = new Schema({
@@ -19,5 +18,4 @@ export const StateSchema = new Schema({
     required: true,
     unique: true,
   },
-  cities: Array,
 });
