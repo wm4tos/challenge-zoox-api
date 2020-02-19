@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 export const generateAggregation = ({ _id, ...match }: any) => ([
-  { $match: { _id: new ObjectId(_id), ...match } },
+  { $match: _id ? { _id: new ObjectId(_id), ...match } : (match || {}) },
   {
     $lookup: {
       from: 'states',
