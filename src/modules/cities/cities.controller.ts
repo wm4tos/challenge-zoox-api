@@ -34,7 +34,6 @@ export class CitiesController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(CacheInterceptor)
   async getAll(@Query() query?: CityDto): Promise<ResponseDto> {
-    console.log('kkkkkkkkkkkk')
     const cities = await this.citiesService.findAll(query);
 
     if (cities.length) return new ResponseDto(true, cities);
@@ -58,7 +57,6 @@ export class CitiesController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(CacheInterceptor)
   async getOne(@Param('_id') _id: ObjectId): Promise<ResponseDto> {
-    console.log('jjjjjjjjjjjjj')
     const city = await this.citiesService.findOne({ _id });
 
     if (city) return new ResponseDto(true, city);
