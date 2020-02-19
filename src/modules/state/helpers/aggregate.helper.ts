@@ -14,6 +14,7 @@ export const generateAggregation = ({ _id, ...match }: any) => ([
     $project: {
       'cities.__v': 0,
       '__v': 0,
+      'cities.state': 0,
     },
   },
 ]);
