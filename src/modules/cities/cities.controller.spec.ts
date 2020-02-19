@@ -76,7 +76,7 @@ describe('Cities Controller', () => {
 
       jest.spyOn(service, 'findAll').mockResolvedValue([SP]);
 
-      return controller.getAll({ _id: SP._id })
+      return controller.getAll({ _id: SP._id as ObjectId })
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, [SP]));
         });
@@ -99,7 +99,7 @@ describe('Cities Controller', () => {
 
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
 
-      return controller.getOne(SP._id)
+      return controller.getOne(SP._id as ObjectId)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, SP));
         });
@@ -124,7 +124,7 @@ describe('Cities Controller', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
       jest.spyOn(service, 'update').mockResolvedValue(expected);
 
-      return controller.update(SP._id, { UF: 'SJ' })
+      return controller.update(SP._id as ObjectId, { UF: 'SJ' })
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, expected, CityMessages.UPDATED));
         });
@@ -178,7 +178,7 @@ describe('Cities Controller', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
       jest.spyOn(service, 'delete').mockResolvedValue(null);
 
-      return controller.remove(SP._id)
+      return controller.remove(SP._id as ObjectId)
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, null, CityMessages.DELETED));
         });
