@@ -1,5 +1,5 @@
-import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards, Query } from '@nestjs/common';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 
@@ -19,6 +19,10 @@ export class CitiesController {
   ){}
 
   @Get()
+  @ApiQuery({
+    name: '_id',
+    type: String,
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: CityMessages.OK,
@@ -28,7 +32,7 @@ export class CitiesController {
     description: CityMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
-  async getAll(query?: CityDto): Promise<ResponseDto> {
+  async getAll(@Query() query?: CityDto): Promise<ResponseDto> {
     const cities = await this.citiesService.findAll(query);
 
     if (cities.length) return new ResponseDto(true, cities);
