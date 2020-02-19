@@ -1,7 +1,7 @@
 import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
@@ -20,6 +20,21 @@ export class StateController {
   ) {}
 
   @Get()
+  @ApiQuery({
+    name: '_id',
+    type: String,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'name',
+    type: String,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'UF',
+    type: String,
+    required: false,
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Estados retornados com sucesso.',
@@ -94,7 +109,7 @@ export class StateController {
     description: StateMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
-  async update(@Param('_id') _id: string | ObjectId, @Body() { cities, ...data }: StateDto): Promise<ResponseDto> {
+  async update(@Param('_id') _id: string | ObjectId, @Body() data: StateDto): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
     if (!state) throw new NotFoundException(new ResponseDto(false, null, StateMessages.NOT_FOUND));
