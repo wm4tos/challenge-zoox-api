@@ -27,17 +27,17 @@ describe('Cities Controller', () => {
     {
       _id: new ObjectId(),
       name: 'São Paulo',
-      state: states[0],
+      state: states[0]._id as ObjectId,
     },
     {
       _id: new ObjectId(),
       name: 'Taboão da Serra',
-      state: states[0],
+      state: states[0]._id as ObjectId,
     },
     {
       _id: new ObjectId(),
       name: 'Minas Gerais',
-      state: states[0],
+      state: states[0]._id as ObjectId,
     },
   ];
 
@@ -119,12 +119,12 @@ describe('Cities Controller', () => {
   describe('update', () => {
     it('should return item updated', () => {
       const [SP] = cities
-      const expected = { ...SP, UF: 'SJ' }
+      const expected = { ...SP, name: 'SPaulo' }
 
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
       jest.spyOn(service, 'update').mockResolvedValue(expected);
 
-      return controller.update(SP._id as ObjectId, { UF: 'SJ' })
+      return controller.update(SP._id as ObjectId, { name: 'SPaulo' })
         .then((response: ResponseDto) => {
           expect(response).toStrictEqual(new ResponseDto(true, expected, CityMessages.UPDATED));
         });
@@ -133,7 +133,7 @@ describe('Cities Controller', () => {
     it('should throw error because user does not exists' , () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(null);
 
-      return controller.update(new ObjectId(), { UF: 'SJ' })
+      return controller.update(new ObjectId(), { name: 'SPaulo' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
           expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
@@ -143,11 +143,10 @@ describe('Cities Controller', () => {
 
   describe('create', () => {
     it('should return created item', () => {
+      const [SP] = states;
       const expected: CityDto = {
-        _id: new ObjectId(),
         name: 'Mato Grosso do Sul',
-        UF: 'MS',
-        cities: [],
+        state: SP._id as ObjectId
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(expected);
