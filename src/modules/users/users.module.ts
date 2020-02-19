@@ -3,6 +3,7 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './users.schema';
+import { UsersController } from './users.controller';
 
 export const UsersModuleOptions: ModuleMetadata = {
   imports: [
@@ -10,6 +11,7 @@ export const UsersModuleOptions: ModuleMetadata = {
   ],
   exports: [UsersService],
   providers: [UsersService],
+  controllers: [UsersController],
 };
 
 @Module(UsersModuleOptions)

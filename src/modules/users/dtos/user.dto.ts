@@ -4,5 +4,5 @@ export class UserDto {
   _id: ObjectId;
   name: string;
   email: string;
-  password: string;
+  password?: string;
 }
