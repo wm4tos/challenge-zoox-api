@@ -4,4 +4,5 @@ export enum CityMessages {
   DUPLICATED = 'Cidade já cadastrada.',
   DELETED = 'Cidade removida com sucesso.',
   UPDATED = 'Cidade modificada com sucesso.',
+  OK = 'Cidades retornadas com sucesso.',
 };
