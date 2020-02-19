@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException, ConflictException } from '@nestjs/common';
+import { NotFoundException, ConflictException, CacheModule } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 
@@ -51,6 +51,7 @@ describe('Cities Controller', () => {
           useValue: {}
         }
       ],
+      imports: [CacheModule.register({ ttl: 600 })]
     }).compile();
 
     controller = module.get<CitiesController>(CitiesController);

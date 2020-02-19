@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException, ConflictException } from '@nestjs/common';
+import { NotFoundException, ConflictException, CacheModule } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 
@@ -19,19 +19,16 @@ describe('State Controller', () => {
       _id: new ObjectId(),
       name: 'São Paulo',
       UF: 'SP',
-      cities: [],
     },
     {
       _id: new ObjectId(),
       name: 'Rio de Janeiro',
       UF: 'RJ',
-      cities: [],
     },
     {
       _id: new ObjectId(),
       name: 'Minas Gerais',
       UF: 'MG',
-      cities: [],
     },
   ];
 
@@ -45,6 +42,7 @@ describe('State Controller', () => {
           useValue: {}
         }
       ],
+      imports: [CacheModule.register({ ttl: 600 })]
     }).compile();
 
     controller = module.get<StateController>(StateController);
@@ -141,7 +139,6 @@ describe('State Controller', () => {
         _id: new ObjectId(),
         name: 'Mato Grosso do Sul',
         UF: 'MS',
-        cities: [],
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(expected);
