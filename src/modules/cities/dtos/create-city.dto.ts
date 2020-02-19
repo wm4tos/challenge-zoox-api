@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 
 export class CreateCityDto {
   @ApiProperty()
-  name: ObjectId;
+  name: string;
   @ApiProperty()
   state: ObjectId;
 }
