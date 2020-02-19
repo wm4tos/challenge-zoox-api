@@ -11,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<UserDto | null> {
+  async validateUserAndPassword(email: string, password: string): Promise<UserDto | null> {
     try {
       const user = await this.usersService.findOneByEmail(email);
 
@@ -25,6 +25,10 @@ export class AuthService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async userExists(email): Promise<UserDto | null> {
+    return this.usersService.findOneByEmail(email);
   }
   
   createToken(user: UserDto): string {
