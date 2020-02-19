@@ -1,4 +1,4 @@
-import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put } from '@nestjs/common';
+import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 
 import { Controller } from 'src/common/helpers/controller.helper';
@@ -92,13 +92,36 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
-  async update(@Param('_id') _id: string | ObjectId, @Body() data: CityDto): Promise<ResponseDto> {
+  async update(@Param('_id') _id: ObjectId, @Body() data: CityDto): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 
     if (!city) throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND));
 
-    await this.citiesService.update(_id as ObjectId, data);
+    await this.citiesService.update(_id, data);
 
     return new ResponseDto(true, Object.assign(city, data), CityMessages.UPDATED);
+  }
+
+  @Delete('/:_id')
+  @ApiParam({
+    name: '_id',
+    type: String,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: CityMessages.DELETED,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: CityMessages.NOT_FOUND,
+  })
+  async remove(@Param('_id') _id: ObjectId) {
+    const city = await this.citiesService.findOne({ _id });
+
+    if (!city) throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND));
+
+    await this.citiesService.delete(_id);
+
+    return new ResponseDto(true, null, CityMessages.DELETED);
   }
 }
