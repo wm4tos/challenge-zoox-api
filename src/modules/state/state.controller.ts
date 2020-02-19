@@ -1,4 +1,4 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete, UseInterceptors, CacheInterceptor } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
@@ -44,6 +44,7 @@ export class StateController {
     description: StateMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(CacheInterceptor)
   async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
     const states = await this.stateService.findAll(query);
 
@@ -62,6 +63,7 @@ export class StateController {
     description: 'Estado não encontrado.',
   })
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(CacheInterceptor)
   async getOne(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id });
 
