@@ -1,4 +1,6 @@
-import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete } from '@nestjs/common';
+import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards } from '@nestjs/common';
+import { ApiParam } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 
 import { Controller } from 'src/common/helpers/controller.helper';
@@ -9,7 +11,6 @@ import { CitiesService } from './cities.service';
 import { CityMessages } from './enums/messages.enum';
 import { CityDto } from './dtos/city.dto';
 import { CreateCityDto } from './dtos/create-city.dto';
-import { ApiParam } from '@nestjs/swagger';
 
 @Controller('cities')
 export class CitiesController {
@@ -26,6 +27,7 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
+  @UseGuards(AuthGuard('jwt'))
   async getAll(query?: CityDto): Promise<ResponseDto> {
     const cities = await this.citiesService.findAll(query);
 
@@ -47,6 +49,7 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
+  @UseGuards(AuthGuard('jwt'))
   async getOne(@Param('_id') _id: ObjectId): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 
@@ -64,6 +67,7 @@ export class CitiesController {
     status: HttpStatus.CONFLICT,
     description: CityMessages.DUPLICATED,
   })
+  @UseGuards(AuthGuard('jwt'))
   async create(@Body() city: CreateCityDto): Promise<ResponseDto> {
     try {
       const created = await this.citiesService.create(city);
@@ -92,6 +96,7 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
+  @UseGuards(AuthGuard('jwt'))
   async update(@Param('_id') _id: ObjectId, @Body() data: CityDto): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 
@@ -115,6 +120,7 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
+  @UseGuards(AuthGuard('jwt'))
   async remove(@Param('_id') _id: ObjectId) {
     const city = await this.citiesService.findOne({ _id });
 
