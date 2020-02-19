@@ -8,6 +8,7 @@ import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { CitiesService } from './cities.service';
 import { CityMessages } from './enums/messages.enum';
 import { CityDto } from './dtos/city.dto';
+import { CreateCityDto } from './dtos/create-city.dto';
 
 @Controller('cities')
 export class CitiesController {
@@ -47,5 +48,29 @@ export class CitiesController {
     if (city) return new ResponseDto(true, city);
 
     throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND))
+  }
+
+  @Post()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: CityMessages.CREATED
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: CityMessages.DUPLICATED,
+  })
+  async create(@Body() city: CreateCityDto): Promise<ResponseDto> {
+    try {
+      const created = await this.citiesService.create(city);
+
+      return new ResponseDto(true, created, CityMessages.CREATED);
+    } catch (error) {
+      switch(error.code) {
+      case 11000:
+        throw new ConflictException(new ResponseDto(false, null, CityMessages.DUPLICATED));
+      default:
+        throw error;
+      }      
+    }
   }
 }
