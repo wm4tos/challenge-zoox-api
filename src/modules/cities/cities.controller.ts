@@ -1,4 +1,4 @@
-import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException } from '@nestjs/common';
+import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 
 import { Controller } from 'src/common/helpers/controller.helper';
@@ -77,5 +77,28 @@ export class CitiesController {
         throw error;
       }      
     }
+  }
+
+  @Put('/:_id')
+  @ApiParam({
+    name: '_id',
+    type: String,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: CityMessages.UPDATED,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: CityMessages.NOT_FOUND,
+  })
+  async update(@Param('_id') _id: string | ObjectId, @Body() data: CityDto): Promise<ResponseDto> {
+    const city = await this.citiesService.findOne({ _id });
+
+    if (!city) throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND));
+
+    await this.citiesService.update(_id as ObjectId, data);
+
+    return new ResponseDto(true, Object.assign(city, data), CityMessages.UPDATED);
   }
 }
