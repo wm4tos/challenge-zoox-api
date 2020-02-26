@@ -18,6 +18,6 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalPipes(new FormatedValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 80);
 }
 bootstrap();
