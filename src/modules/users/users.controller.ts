@@ -1,4 +1,4 @@
-import { Post, HttpStatus, Body, ConflictException, NotFoundException } from '@nestjs/common';
+import { Post, HttpStatus, Body, ConflictException } from '@nestjs/common';
 
 import { Controller } from 'src/common/helpers/controller.helper';
 import { ResponseDto } from 'src/common/interfaces/response.dto';

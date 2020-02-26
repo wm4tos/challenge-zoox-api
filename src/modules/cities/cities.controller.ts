@@ -38,7 +38,7 @@ export class CitiesController {
 
     if (cities.length) return new ResponseDto(true, cities);
 
-    throw new NotFoundException(new ResponseDto(false, cities, CityMessages.NOT_FOUND))
+    throw new NotFoundException(new ResponseDto(false, cities, CityMessages.NOT_FOUND));
   }
 
   @Get('/:_id')
@@ -61,13 +61,13 @@ export class CitiesController {
 
     if (city) return new ResponseDto(true, city);
 
-    throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND))
+    throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND));
   }
 
   @Post()
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: CityMessages.CREATED
+    description: CityMessages.CREATED,
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
@@ -127,7 +127,7 @@ export class CitiesController {
     description: CityMessages.NOT_FOUND,
   })
   @UseGuards(AuthGuard('jwt'))
-  async remove(@Param('_id') _id: ObjectId) {
+  async remove(@Param('_id') _id: ObjectId): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 
     if (!city) throw new NotFoundException(new ResponseDto(false, null, CityMessages.NOT_FOUND));

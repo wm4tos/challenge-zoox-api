@@ -31,7 +31,7 @@ export class AuthController {
   async authenticate(@Body() { email, password }: AuthenticateDto): Promise<ResponseDto> {
     const userExists = await this.authService.userExists(email);
 
-    if (!userExists) throw new NotFoundException(new ResponseDto(false, null, AuthMessages.NOT_FOUND))
+    if (!userExists) throw new NotFoundException(new ResponseDto(false, null, AuthMessages.NOT_FOUND));
 
     const user = await this.authService.validateUserAndPassword(email, password);
 

@@ -20,9 +20,9 @@ describe('UsersController', () => {
       _id: new ObjectId(),
       name: 'Wesley Matos',
       email: 'wrickee@gmail.com',
-      password: ''
-    }
-  ]
+      password: '',
+    },
+  ];
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -37,7 +37,7 @@ describe('UsersController', () => {
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    service = module.get<UsersService>(UsersService)
+    service = module.get<UsersService>(UsersService);
   });
 
   it('should be defined', () => {
@@ -47,37 +47,29 @@ describe('UsersController', () => {
   describe('createUser', () => {
     it('should return user created', () => {
       const _id = new ObjectId();
-      const user: CreateUserDto = {
-        email: 'wes@gmail.com',
-        name: 'Wesley Henrique',
-        password: 'wes123'
-      };
+      const [wesley] = users;
 
       jest.spyOn(service, 'create').mockResolvedValue({
         _id,
-        ...user,
+        ...wesley,
       });
 
-      return controller.createUser(user)
+      return controller.createUser(wesley as CreateUserDto)
         .then(res => {
-          return expect(res).toStrictEqual(new ResponseDto(true, { _id, ...user }, UserMessages.REGISTERED));
+          return expect(res).toStrictEqual(new ResponseDto(true, { _id, ...wesley }, UserMessages.REGISTERED));
         });
     });
 
     it('should return ConflictException', () => {
-      const user: CreateUserDto = {
-        email: 'wrickee@gmail.com',
-        name: 'Wesley Henrique',
-        password: 'wes123'
-      };
+      const [wesley] = users;
 
-      jest.spyOn(service, 'create').mockRejectedValue({ code: 11000 })
+      jest.spyOn(service, 'create').mockRejectedValue({ code: 11000 });
 
-      return controller.createUser(user)
+      return controller.createUser(wesley as CreateUserDto)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
           expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, UserMessages.DUPLICATED));
-        })
-    })
-  })
+        });
+    });
+  });
 });

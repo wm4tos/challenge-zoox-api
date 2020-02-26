@@ -4,12 +4,12 @@ import { ResponseDto } from '../interfaces/response.dto';
 
 export class FormatedValidationPipe extends ValidationPipe {
   constructor(options?: ValidationPipeOptions) {
-    super(options)
+    super(options);
   }
 
   async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
     try {
-      const result = await super.transform(value, metadata)
+      const result = await super.transform(value, metadata);
 
       return result;
     } catch (error) {

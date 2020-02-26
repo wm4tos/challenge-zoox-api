@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { FormatedValidationPipe } from './common/pipes/validation.pipe';
 
 async function bootstrap(): Promise<void> {
@@ -17,7 +16,7 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api/docs', app, document);
 
-  app.useGlobalPipes(new FormatedValidationPipe())
+  app.useGlobalPipes(new FormatedValidationPipe());
 
   await app.listen(3000);
 }

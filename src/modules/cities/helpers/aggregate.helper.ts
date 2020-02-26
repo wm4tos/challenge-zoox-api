@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export const generateAggregation = ({ _id, ...match }: any) => ([
+export const generateAggregation = ({ _id, ...match }: any): any[] => ([
   { $match: _id ? { _id: new ObjectId(_id), ...match } : (match || {}) },
   {
     $lookup: {

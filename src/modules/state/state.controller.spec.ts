@@ -39,14 +39,14 @@ describe('State Controller', () => {
         StateService,
         {
           provide: getModelToken('State'),
-          useValue: {}
-        }
+          useValue: {},
+        },
       ],
-      imports: [CacheModule.register({ ttl: 600 })]
+      imports: [CacheModule.register({ ttl: 600 })],
     }).compile();
 
     controller = module.get<StateController>(StateController);
-    service = module.get<StateService>(StateService)
+    service = module.get<StateService>(StateService);
   });
 
   it('should be defined', () => {
@@ -110,8 +110,8 @@ describe('State Controller', () => {
 
   describe('update', () => {
     it('should return item updated', () => {
-      const [SP] = states
-      const expected = { ...SP, UF: 'SJ' }
+      const [SP] = states;
+      const expected = { ...SP, UF: 'SJ' };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
       jest.spyOn(service, 'update').mockResolvedValue(expected);

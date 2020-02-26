@@ -1,4 +1,4 @@
-import { Model, Query, Aggregate, DocumentQuery } from 'mongoose';
+import { Model, Query, Aggregate } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId, DeleteWriteOpResultObject } from 'mongodb';
@@ -20,7 +20,7 @@ export class CitiesService {
   }
 
   async findOne(query?: CityDto): Promise<CityDto> {
-    return (await this.findAll(query)).shift()
+    return (await this.findAll(query)).shift();
   }
 
   create(data: CreateCityDto): Promise<CityDto | any> {

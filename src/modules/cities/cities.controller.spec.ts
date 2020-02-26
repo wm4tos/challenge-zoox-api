@@ -48,14 +48,14 @@ describe('Cities Controller', () => {
         CitiesService,
         {
           provide: getModelToken('Cities'),
-          useValue: {}
-        }
+          useValue: {},
+        },
       ],
-      imports: [CacheModule.register({ ttl: 600 })]
+      imports: [CacheModule.register({ ttl: 600 })],
     }).compile();
 
     controller = module.get<CitiesController>(CitiesController);
-    service = module.get<CitiesService>(CitiesService)
+    service = module.get<CitiesService>(CitiesService);
   });
 
   it('should be defined', () => {
@@ -119,8 +119,8 @@ describe('Cities Controller', () => {
 
   describe('update', () => {
     it('should return item updated', () => {
-      const [SP] = cities
-      const expected = { ...SP, name: 'SPaulo' }
+      const [SP] = cities;
+      const expected = { ...SP, name: 'SPaulo' };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(SP);
       jest.spyOn(service, 'update').mockResolvedValue(expected);
@@ -147,7 +147,7 @@ describe('Cities Controller', () => {
       const [SP] = states;
       const expected: CityDto = {
         name: 'Mato Grosso do Sul',
-        state: SP._id as ObjectId
+        state: SP._id as ObjectId,
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(expected);
