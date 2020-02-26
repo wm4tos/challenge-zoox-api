@@ -80,7 +80,7 @@ describe('State Controller', () => {
       return controller.getAll({ _id: '1' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, [], StateMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, [], StateMessages.NOT_FOUND));
         });
     });
   });
@@ -103,7 +103,7 @@ describe('State Controller', () => {
       return controller.getOne(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
         });
     });
   });
@@ -128,7 +128,7 @@ describe('State Controller', () => {
       return controller.update(new ObjectId(), { UF: 'SJ' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
         });
     });
   });
@@ -157,7 +157,7 @@ describe('State Controller', () => {
       return controller.create(state as CreateStateDto)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, StateMessages.DUPLICATED));
         });
     });
   });
@@ -181,7 +181,7 @@ describe('State Controller', () => {
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, StateMessages.NOT_FOUND));
         });
     });
   });

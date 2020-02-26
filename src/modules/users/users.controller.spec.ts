@@ -76,7 +76,7 @@ describe('UsersController', () => {
       return controller.createUser(user)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, UserMessages.DUPLICATED));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, UserMessages.DUPLICATED));
         })
     })
   })

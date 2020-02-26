@@ -89,7 +89,7 @@ describe('Cities Controller', () => {
       return controller.getAll({ _id: '1' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, [], CityMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, [], CityMessages.NOT_FOUND));
         });
     });
   });
@@ -112,7 +112,7 @@ describe('Cities Controller', () => {
       return controller.getOne(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
@@ -137,7 +137,7 @@ describe('Cities Controller', () => {
       return controller.update(new ObjectId(), { name: 'SPaulo' })
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
@@ -166,7 +166,7 @@ describe('Cities Controller', () => {
       return controller.create(city as CreateCityDto)
         .catch((err: ConflictException) => {
           expect(err.getStatus()).toBe(409);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.DUPLICATED));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, CityMessages.DUPLICATED));
         });
     });
   });
@@ -190,7 +190,7 @@ describe('Cities Controller', () => {
       return controller.remove(new ObjectId())
         .catch((err: NotFoundException) => {
           expect(err.getStatus()).toBe(404);
-          expect(err.message).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
+          expect(err.getResponse()).toStrictEqual(new ResponseDto(false, null, CityMessages.NOT_FOUND));
         });
     });
   });
