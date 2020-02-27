@@ -1,6 +1,5 @@
-import { Post, HttpStatus, Body, ConflictException } from '@nestjs/common';
+import { Post, HttpStatus, Body, ConflictException, Controller } from '@nestjs/common';
 
-import { Controller } from 'src/common/helpers/controller.helper';
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
 import { CommonMessages } from 'src/common/enums/messages.enum';
@@ -8,8 +7,10 @@ import { CommonMessages } from 'src/common/enums/messages.enum';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserMessages } from './enums/messages.enum';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService
