@@ -1,7 +1,7 @@
 # CHALLENGE ZOOX
 
 ## Descrição
-Oi! Essa é uma API criada para o teste técnico da [Zoox](https://zooxsmart.com/en/)
+Oi! Essa é uma API criada para o teste técnico da [ZOOX](https://zooxsmart.com/en/)
 
 ## Como rodar o projeto?
 Para iniciar o projeto, eu recomendo que você siga as inscrições [deste repositório](https://github.com/wricke/challenge-zoox-workspace).
@@ -16,6 +16,9 @@ Para iniciar o projeto, eu recomendo que você siga as inscrições [deste repos
     ```
   - Rode o comando `npm install` ou `yarn`
   - Para rodar a versão de desenvolvimento, utilize `npm run start:dev` ou `yarn run start:dev`
+
+## Preview
+Você pode ver um swagger da aplicação rodando [aqui](https://challenge-zoox-api.herokuapp.com/api/docs).
 
 ## Dúvidas ou sugestões?
 Me mande um [e-mail](mailto:wrickee@gmail.com) :)
