@@ -17,6 +17,10 @@ Para iniciar o projeto, eu recomendo que você siga as inscrições [deste repos
   - Rode o comando `npm install` ou `yarn`
   - Para rodar a versão de desenvolvimento, utilize `npm run start:dev` ou `yarn run start:dev`
 
+## Como rodar os testes
+  - Instale as dependências do projeto (você pode utilizar `npm install` ou `yarn`)
+  - Rode o comando `npm run test` ou `yarn run test`
+
 ## Preview
 Você pode ver um swagger da aplicação rodando [aqui](https://challenge-zoox-api.herokuapp.com/api/docs).
 
