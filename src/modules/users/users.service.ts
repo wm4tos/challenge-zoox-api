@@ -14,7 +14,7 @@ export class UsersService {
     private readonly userRepository: Model<UserDocument>
   ) {}
 
-  async findOneByEmail(email: string): Promise<UserDto> {
+  async findOneByEmail(email: string): Promise<UserDocument> {
     return this.userRepository.findOne({ email });
   }
 

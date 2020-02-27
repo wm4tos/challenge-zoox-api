@@ -13,10 +13,14 @@ export class AuthService {
 
   async validateUserAndPassword(email: string, password: string): Promise<UserDto | null> {
     try {
-      const user = await this.usersService.findOneByEmail(email);
+      const userData = await this.usersService.findOneByEmail(email);
+      const user = userData.toObject();
 
       if (user && compareSync(password, user.password)) {
         delete user.password;
+        delete user.__v;
+
+        console.log('user :', user);
 
         return user;
       }
