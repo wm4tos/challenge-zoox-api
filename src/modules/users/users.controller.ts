@@ -25,6 +25,10 @@ export class UsersController {
     status: HttpStatus.BAD_REQUEST,
     description: CommonMessages.BAD_REQUEST,
   })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: UserMessages.DUPLICATED,
+  })
   async createUser(@Body() data: CreateUserDto): Promise<ResponseDto> {
     try {
       const user = await this.usersService.create(data);
