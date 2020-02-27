@@ -37,6 +37,6 @@ export class AuthController {
 
     if (!user) throw new UnauthorizedException(new ResponseDto(false, null, AuthMessages.INVALID));
 
-    return new ResponseDto(true, this.authService.createToken(user));
+    return new ResponseDto(true, { user, token: this.authService.createToken(user) });
   }
 }
