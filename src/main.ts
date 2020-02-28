@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { FormatedValidationPipe } from './common/pipes/validation.pipe';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   app.setGlobalPrefix('api');
 
   const options = new DocumentBuilder()
