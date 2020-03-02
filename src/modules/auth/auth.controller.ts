@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
+import { CommonMessages } from 'src/common/enums/messages.enum';
 
 import { AuthService } from './auth.service';
 import { AuthenticateDto } from './dtos/login.dto';
@@ -27,6 +28,14 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: AuthMessages.NOT_FOUND,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: CommonMessages.BAD_REQUEST,
   })
   async authenticate(@Body() { email, password }: AuthenticateDto): Promise<ResponseDto> {
     const userExists = await this.authService.userExists(email);

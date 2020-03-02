@@ -1,17 +1,18 @@
 import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete, UseInterceptors, CacheInterceptor } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { ResponseDto } from 'src/common/interfaces/response.dto';
 import { ApiResponse } from 'src/common/helpers/api-response.helper';
 import { Controller } from 'src/common/helpers/controller.helper';
+import { CommonMessages } from 'src/common/enums/messages.enum';
 
 import { StateService } from './state.service';
 import { StateMessages } from './enums/messages.enum';
 import { StateDto } from './dtos/state.dto';
 import { CreateStateDto } from './dtos/create-state.dto';
 import { StateDocument } from './state.schema';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('states')
 export class StateController {
@@ -43,7 +44,11 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: StateMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getAll(@Query() query?: StateDto): Promise<ResponseDto> {
     const states = await this.stateService.findAll(query);
@@ -62,7 +67,11 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: 'Estado não encontrado.',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getOne(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id });
@@ -81,7 +90,15 @@ export class StateController {
     status: HttpStatus.CONFLICT,
     description: StateMessages.DUPLICATED,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: CommonMessages.BAD_REQUEST,
+  })
+  @UseGuards(AuthGuard)
   async create(@Body() state: CreateStateDto): Promise<ResponseDto> {
     try {
       const created = await this.stateService.create(state as StateDocument);
@@ -110,7 +127,15 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: StateMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: CommonMessages.BAD_REQUEST,
+  })
+  @UseGuards(AuthGuard)
   async update(@Param('_id') _id: string | ObjectId, @Body() data: StateDto): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 
@@ -134,7 +159,11 @@ export class StateController {
     status: HttpStatus.NOT_FOUND,
     description: StateMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   async remove(@Param('_id') _id: string | ObjectId): Promise<ResponseDto> {
     const state = await this.stateService.findOne({ _id: new ObjectId(_id) });
 

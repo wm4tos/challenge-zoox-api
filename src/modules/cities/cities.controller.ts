@@ -1,6 +1,5 @@
 import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards, Query, UseInterceptors, CacheInterceptor } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 
 import { Controller } from 'src/common/helpers/controller.helper';
@@ -11,6 +10,9 @@ import { CitiesService } from './cities.service';
 import { CityMessages } from './enums/messages.enum';
 import { CityDto } from './dtos/city.dto';
 import { CreateCityDto } from './dtos/create-city.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { AuthMessages } from '../auth/enums/messages.enum';
+import { CommonMessages } from 'src/common/enums/messages.enum';
 
 @Controller('cities')
 export class CitiesController {
@@ -31,7 +33,11 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getAll(@Query() query?: CityDto): Promise<ResponseDto> {
     const cities = await this.citiesService.findAll(query);
@@ -54,7 +60,11 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getOne(@Param('_id') _id: ObjectId): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
@@ -73,7 +83,15 @@ export class CitiesController {
     status: HttpStatus.CONFLICT,
     description: CityMessages.DUPLICATED,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: CommonMessages.BAD_REQUEST,
+  })
+  @UseGuards(AuthGuard)
   async create(@Body() city: CreateCityDto): Promise<ResponseDto> {
     try {
       const created = await this.citiesService.create(city);
@@ -102,7 +120,15 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: CommonMessages.BAD_REQUEST,
+  })
+  @UseGuards(AuthGuard)
   async update(@Param('_id') _id: ObjectId, @Body() data: CityDto): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 
@@ -126,7 +152,11 @@ export class CitiesController {
     status: HttpStatus.NOT_FOUND,
     description: CityMessages.NOT_FOUND,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommonMessages.UNAUTHORIZED,
+  })
+  @UseGuards(AuthGuard)
   async remove(@Param('_id') _id: ObjectId): Promise<ResponseDto> {
     const city = await this.citiesService.findOne({ _id });
 

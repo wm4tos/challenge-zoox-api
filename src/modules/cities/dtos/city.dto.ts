@@ -2,10 +2,16 @@ import { ObjectId } from 'mongodb';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CityDto {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   _id?: string | ObjectId;
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   name?: string;
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   state?: ObjectId;
 }
