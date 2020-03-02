@@ -1,7 +1,13 @@
-import { ObjectId } from 'mongodb';
+import { matchToRegex, objectIdOrEmpty } from 'src/common/helpers/aggregate.helper';
 
-export const generateAggregation = ({ _id, ...match }: any): any[] => ([
-  { $match: _id ? { _id: new ObjectId(_id), ...match } : (match || {}) },
+export const generateAggregation = ({ _id, state, ...match }: any): any[] => ([
+  {
+    $match: Object.assign(
+      objectIdOrEmpty({ _id }),
+      objectIdOrEmpty({ state }),
+      matchToRegex(match),
+    ),
+  },
   {
     $lookup: {
       from: 'states',
