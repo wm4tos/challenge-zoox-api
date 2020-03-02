@@ -1,4 +1,4 @@
-import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards, Query, UseInterceptors, CacheInterceptor } from '@nestjs/common';
+import { Get, HttpStatus, NotFoundException, Param, Post, Body, ConflictException, Put, Delete, UseGuards, Query, UseInterceptors, CacheInterceptor, Inject } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
 
@@ -17,13 +17,15 @@ import { CommonMessages } from 'src/common/enums/messages.enum';
 @Controller('cities')
 export class CitiesController {
   constructor(
-    private readonly citiesService: CitiesService
+    private readonly citiesService: CitiesService,
+    @Inject('CACHE_MANAGER') private readonly cacheManager,
   ){}
 
   @Get()
   @ApiQuery({
     name: '_id',
     type: String,
+    required: false,
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -96,6 +98,8 @@ export class CitiesController {
     try {
       const created = await this.citiesService.create(city);
 
+      this.resetCache();
+
       return new ResponseDto(true, created, CityMessages.CREATED);
     } catch (error) {
       switch(error.code) {
@@ -136,6 +140,8 @@ export class CitiesController {
 
     await this.citiesService.update(_id, data);
 
+    this.resetCache(_id);
+
     return new ResponseDto(true, Object.assign(city, data), CityMessages.UPDATED);
   }
 
@@ -164,6 +170,14 @@ export class CitiesController {
 
     await this.citiesService.delete(_id);
 
+    this.resetCache(_id);
+
     return new ResponseDto(true, null, CityMessages.DELETED);
+  }
+
+  private resetCache(_id?: String | ObjectId) {
+    this.cacheManager.del('/api/cities');
+    console.log('_id :', _id);
+    if (_id) this.cacheManager.del(`/api/cities/${_id}`);
   }
 }

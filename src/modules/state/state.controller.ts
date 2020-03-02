@@ -1,4 +1,4 @@
-import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete, UseInterceptors, CacheInterceptor } from '@nestjs/common';
+import { Get, Query, UseGuards, HttpStatus, NotFoundException, Param, Body, Post, ConflictException, Put, Delete, UseInterceptors, CacheInterceptor, Inject } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 
@@ -18,6 +18,7 @@ import { AuthGuard } from '../auth/auth.guard';
 export class StateController {
   constructor(
     private readonly stateService: StateService,
+    @Inject('CACHE_MANAGER') private readonly cacheManager,
   ) {}
 
   @Get()
@@ -103,6 +104,8 @@ export class StateController {
     try {
       const created = await this.stateService.create(state as StateDocument);
 
+      this.resetCache();
+
       return new ResponseDto(true, created, StateMessages.CREATED);
     } catch (error) {
       switch(error.code) {
@@ -143,6 +146,8 @@ export class StateController {
 
     await this.stateService.update(_id as ObjectId, data);
 
+    this.resetCache(_id);
+
     return new ResponseDto(true, Object.assign(state, data), StateMessages.UPDATED);
   }
 
@@ -171,6 +176,13 @@ export class StateController {
 
     await this.stateService.delete(new ObjectId(_id));
 
+    this.resetCache(_id);
+
     return new ResponseDto(true, null, StateMessages.DELETED);
+  }
+
+  private resetCache(_id?: String | ObjectId) {
+    this.cacheManager.del('/api/cities');
+    if (_id) this.cacheManager.del(`/api/cities/${_id}`);
   }
 }
