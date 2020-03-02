@@ -8,23 +8,15 @@ export class AuthGuard extends NestGuard('jwt') {
     super(...args);
   }
 
-  async canActivate(ctx: ExecutionContext): Promise<any> {
-    try {
-      const canActivate = await super.canActivate(ctx);
-
-      return canActivate;
-    } catch (error) {
-      throw new ResponseDto(false, null, CommonMessages.UNAUTHORIZED, error);
-    }
+  canActivate(ctx: ExecutionContext) {
+    return super.canActivate(ctx);
   }
 
   handleRequest(err, user, info, ctx) {
-    console.log('super.handleRequest(err, user, info, ctx) :', super.handleRequest(err, user, info, ctx));
     return super.handleRequest(err, user, info, ctx)
   }
 
   logIn(req) {
-    console.log('super.logIn(req) :', super.logIn(req));
     return super.logIn(req);
   }
 }
