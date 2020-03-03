@@ -177,7 +177,6 @@ export class CitiesController {
 
   private resetCache(_id?: String | ObjectId) {
     this.cacheManager.del('/api/cities');
-    console.log('_id :', _id);
     if (_id) this.cacheManager.del(`/api/cities/${_id}`);
   }
 }

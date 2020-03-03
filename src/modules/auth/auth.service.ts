@@ -20,8 +20,6 @@ export class AuthService {
         delete user.password;
         delete user.__v;
 
-        console.log('user :', user);
-
         return user;
       }
 
