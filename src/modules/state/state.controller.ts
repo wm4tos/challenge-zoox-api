@@ -182,7 +182,7 @@ export class StateController {
   }
 
   private resetCache(_id?: String | ObjectId) {
-    this.cacheManager.del('/api/cities');
-    if (_id) this.cacheManager.del(`/api/cities/${_id}`);
+    this.cacheManager.del('/api/states');
+    if (_id) this.cacheManager.del(`/api/states/${_id}`);
   }
 }
